@@ -1,0 +1,113 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title Cart
+    link(rel="stylesheet", href="../css/style.css")
+  body
+    .main-content
+      header.header.bg-white#header
+        .container-fluid
+          .page-header
+            .header-left
+              .logo-image
+                a(href="/product/home")
+                  img(src="../images/wigo-logo-img.png", width="70", height="36", alt="Wigo Store", itemprop="logo")
+              
+            .header-right
+              .header-items
+                span.sign-in
+                  svg(width="22px", height="22px", viewBox="-1 -1 21 20")
+                    g(transform="translate(0.968750, -0.031250)", stroke="none", stroke-width="1", fill="currentColor", fill-rule="nonzero")
+                      path(d="M9,7.5 C10.704,7.5 12.086,6.157 12.086,4.5 C12.086,2.843 10.704,1.5 9,1.5 C7.296,1.5 5.914,2.843 5.914,4.5 C5.914,6.157 7.296,7.5 9,7.5 Z M9,9 C6.444,9 4.371,6.985 4.371,4.5 C4.371,2.015 6.444,0 9,0 C11.556,0 13.629,2.015 13.629,4.5 C13.629,6.985 11.556,9 9,9 Z M1.543,18 L0,18 L0,15 C0,12.377 2.187,10.25 4.886,10.25 L14.143,10.25 C16.273,10.25 18,11.929 18,14 L18,18 L16.457,18 L16.457,14 C16.457,12.757 15.421,11.75 14.143,11.75 L4.886,11.75 C3.04,11.75 1.543,13.205 1.543,15 L1.543,18 Z")
+                  .head-link.bg-white
+                    a.main-menu-link(href="/logout") Logout
+                    a(href="/profile") profile 
+                span.cart-link  
+                  a(href="/product/cart")
+                    svg(width="24px" height="24px", viewBox="0 -2 37 35")
+                      g(transform="translate(0.500000, 0.500000)", stroke="none", fill="currentColor", fill-rule="nonzero")
+                        path(d="M0.2,11 L9.5,29 L26.4,29 L35.7,11 L0.2,11 Z M24.5,26 L11.5,26 L4.8,14 L31.2,14 L24.5,26 L24.5,26 Z M18.5,3 C22.7,3 25.5,6.3 25.5,8.5 L28.5,8.5 C28.5,4.5 24.2,0 18.5,0 C12.8,0 8.5,4.5 8.5,8.5 L11.5,8.5 C11.5,6.3 14.3,3 18.5,3 Z")
+      section
+        .container
+          .cart-template.page-content
+            h2 Cart
+            .cart-count-price
+              p.no-margin
+                if products && products.length > 0
+                  span.cart-total-quantity= `TOTAL: ${products.length} items`
+                  strong
+                  span
+                    span#revy-cart-subtotal-price
+
+            .main-cart-wrapper
+              .cart__items.cart__block
+                .line-items
+                  if products && products.length > 0
+                    each prod,index in products
+                      .line-item
+                        .line-item__left
+                          .line-item__image-wrapper
+                            img.line-item__image.image(src=`${prod.url}`, alt="")
+                            input(type="hidden" name="id" class="remove" value=`${prod._id}`)
+                  
+                        .line-item__right
+                          .line-item__details
+                            h2.line-item-title
+                              a.cart__product-title(href=`/product/productDetails/${prod._id}`)= `${prod.productName}`
+                            a.line-item__remove(title="Remove item", href=`#`)
+                              svg.svg-inline--fa.fa-trash-alt.fa-w-14.fa-3x(viewBox="0 0 448 512")
+                                path(fill="currentColor", d="M32 464a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128H32zm272-256a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zM432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16")
+                          .line-item__price
+                            span.price(data-currency-usd=`$${prod.price}`)
+                              strong Price:
+                            |= #{prod.price}
+                          .line-item__total-amount-price
+                            strong Total Price:
+                            span.totalPrice
+                          .line-item__quantity
+                            span.line-item__quantity-text Quantity:
+                            input(type="text", name="updates[]", size="4",id='quantity-input',value=`${prod.quantity}`)
+                            input(type="hidden" name="id",value=`${prod._sku}`).product-sku
+                          button.button.update_btn.updateQuantity( type='button',id='update', href=("#")) Update Quantity
+                  else 
+                    p.noProducts No products in cart. 
+              .cart__details.cart__block
+                if products  && products.length > 0             
+                  .cart__details-wrap
+                    h5 ORDER SUMMARY
+                    p.no-margin.evenly-align
+                      span.cart-total-quantity= `${products.length} items`
+                      span.cart-total-price
+                    .cart-subtotal.evenly-align.cart__total
+                      span.cart-subtotal__title Discount
+                      strong
+                        span.cart-subtotal__price 
+                    .cart__total.evenly-align
+                      span.cart__total-text Total:
+                      strong.cart-total-price
+                        span.totalDiscountPrice.nodiscountTotalPrice 
+                        span $
+                        //-  button.button.update_btn.updateBtn(type="submit") Update Quantity
+                    a.button.checkout_btn.button--hollow.checkout(href="#") Checkout
+                    .cart-promo
+                      h5 ENTER A PROMO CODE
+                      input#devPromo(type="text" class="promo-code")
+                      a(href="#").apply-coupon Apply Coupon
+                      input(type="hidden" name="id" class="get-discount" value=``)
+                    .text-center.mt-20
+                      a.link-text-line(href="/product/home" title="Continue shopping") Continue shopping
+
+        //- footer.footer.bg-white
+      //-   .container
+      //-     | This is footer section
+  script(src='/js/quantity.js')  
+  script(src='/js/removeCart.js')  
+  script(src='/js/getDiscount.js') 
+  script(src='/js/checkout.js')  
+  
+
+                          
+
+               
